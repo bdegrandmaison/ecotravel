@@ -55,15 +55,18 @@ const breadcrumbItemsGenerate = (location: Location<any>) => {
     splittedPathname.map((path, index) => {
       if (path === "" || path === "ecotravel") {
         generatedBreadcrumbs.push({
-          title: "Accueil",
-          href: `${formatRoute()}/`,
+          title: <Link to="/">Accueil</Link>,
         });
       }
       if (index === 1) {
         generatedBreadcrumbs.push({
-          title:
-            path === "destinations" ? capitalize(path) : capitalize("à propos"),
-          href: `${formatRoute()}/${path}`,
+          title: (
+            <Link to={`/${path}`}>
+              {path === "destinations"
+                ? capitalize(path)
+                : capitalize("à propos")}
+            </Link>
+          ),
         });
       }
 
@@ -71,8 +74,11 @@ const breadcrumbItemsGenerate = (location: Location<any>) => {
         .filter((destination) => destination.id === Number(path))
         .map((destination) => {
           generatedBreadcrumbs.push({
-            title: destination.name,
-            href: `${formatRoute()}/destinations/${destination.id}`,
+            title: (
+              <Link to={`/destinations/${destination.id}`}>
+                {destination.name}
+              </Link>
+            ),
           });
         });
     });
