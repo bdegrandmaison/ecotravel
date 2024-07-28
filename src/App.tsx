@@ -10,7 +10,7 @@ import Home from "./pages/Home";
 import Destination from "./pages/Destination";
 import About from "./pages/About";
 import DestinationList from "./pages/DestinationList";
-import { capitalize } from "./utils";
+import { capitalize, formatRoute } from "./utils";
 import mockDestinations from "./mocks/mockData/mockDestinations";
 import {
   BreadcrumbItemType,
@@ -135,10 +135,16 @@ const App = () => {
           }}
         >
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/destinations" element={<DestinationList />} />
-            <Route path="/destinations/:id" element={<Destination />} />
-            <Route path="/about" element={<About />} />
+            <Route path={formatRoute()} element={<Home />} />
+            <Route
+              path={`${formatRoute()}destinations`}
+              element={<DestinationList />}
+            />
+            <Route
+              path={`${formatRoute()}destinations/:id`}
+              element={<Destination />}
+            />
+            <Route path={`${formatRoute()}about`} element={<About />} />
           </Routes>
         </div>
       </Content>

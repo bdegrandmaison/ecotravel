@@ -4,7 +4,7 @@ import { Card, Spin, Carousel } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { DestinationType } from "../types";
-import { formatDate, formatPrice } from "../utils";
+import { formatDate, formatPrice, formatRoute } from "../utils";
 
 const fetchDestination = async (id: string): Promise<DestinationType> => {
   const { data } = await axios.get(`/api/destinations/${id}`);
@@ -41,7 +41,7 @@ const Destination: React.FC = () => {
               <div key={0}>
                 <img
                   alt={destination.image.altText}
-                  src={destination.image.src}
+                  src={`${formatRoute()}${destination.image.src}`}
                   style={carouselImageStyle}
                 />
               </div>
@@ -49,7 +49,7 @@ const Destination: React.FC = () => {
               {destination.additionalImages.map((image, index) => (
                 <div key={index + 1}>
                   <img
-                    src={image.src}
+                    src={`${formatRoute()}${image.src}`}
                     alt={image.altText}
                     style={carouselImageStyle}
                   />

@@ -1,15 +1,21 @@
 import { Card } from "antd";
 import { Link } from "react-router-dom";
 import { DestinationType } from "../types";
-import { formatDate, formatPrice } from "../utils";
+import { formatDate, formatPrice, formatRoute } from "../utils";
 
 const DestinationCard = ({ destination }: { destination: DestinationType }) => {
   return (
-    <Link to={`/destinations/${destination.id}`} style={{ display: "block" }}>
+    <Link
+      to={`${formatRoute()}destinations/${destination.id}`}
+      style={{ display: "block" }}
+    >
       <Card
         hoverable
         cover={
-          <img alt={destination.image.altText} src={destination.image.src} />
+          <img
+            alt={destination.image.altText}
+            src={`${formatRoute()}${destination.image.src}`}
+          />
         }
         title={destination.name}
       >

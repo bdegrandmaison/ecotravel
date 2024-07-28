@@ -26,3 +26,7 @@ export const formatDateTime = (date: string) => {
     minute: "numeric",
   });
 };
+
+export const formatRoute = () => {
+  return import.meta.env.DEV ? "/" : "/ecotravel/";
+};
