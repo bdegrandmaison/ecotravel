@@ -99,7 +99,7 @@ const App = () => {
           width: "100%",
           display: "flex",
           alignItems: "center",
-          backgroundColor: "#2E8B57", // Vert foncé
+          backgroundColor: "#2E8B57",
         }}
       >
         <div className="logo">
