@@ -5,6 +5,7 @@ import {
   Routes,
   Link,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme, Typography } from "antd";
 import { capitalize, formatRoute } from "./utils";
@@ -148,6 +149,7 @@ const App = () => {
               <Route path="/destinations" element={<DestinationList />} />
               <Route path="/destinations/:id" element={<Destination />} />
               <Route path="/about" element={<About />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
         </div>

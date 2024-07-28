@@ -15,14 +15,12 @@ import { useMutation } from "@tanstack/react-query";
 import DestinationCard from "../components/DestinationCard";
 import { DestinationType } from "../types";
 import mockDestinations from "../mocks/mockData/mockDestinations";
-import { formatRoute } from "../utils";
+import { dateFormat, formatRoute } from "../utils";
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
 dayjs.extend(customParseFormat);
-
-const dateFormat = "DD/MM/YYYY";
 
 const disabledDate = (current: Dayjs) => {
   return (

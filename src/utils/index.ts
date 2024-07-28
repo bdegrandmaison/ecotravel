@@ -30,3 +30,5 @@ export const formatDateTime = (date: string) => {
 export const formatRoute = () => {
   return import.meta.env.DEV ? "" : "/ecotravel";
 };
+
+export const dateFormat = "DD/MM/YYYY";

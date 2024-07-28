@@ -1,17 +1,20 @@
-import React from "react";
 import { useParams } from "react-router-dom";
-import { Card, Spin, Carousel } from "antd";
+import { Card, Spin, Carousel, DatePicker, Form, Input, Button } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { DestinationType } from "../types";
-import { formatDate, formatPrice, formatRoute } from "../utils";
+import { dateFormat, formatDate, formatPrice, formatRoute } from "../utils";
+import dayjs, { Dayjs } from "dayjs";
 
 const fetchDestination = async (id: string): Promise<DestinationType> => {
   const { data } = await axios.get(`/api/destinations/${id}`);
   return data;
 };
 
-const Destination: React.FC = () => {
+const { RangePicker } = DatePicker;
+
+const Destination = () => {
+  const [form] = Form.useForm();
   const { id } = useParams<{ id: string }>();
   const {
     data: destination,
@@ -32,6 +35,19 @@ const Destination: React.FC = () => {
   if (error) return <div>Erreur lors du chargement de la destination</div>;
 
   if (destination) {
+    const disabledDates = (current: Dayjs) => {
+      console.log(current);
+
+      return (
+        current < dayjs(destination.startDate) ||
+        current > dayjs(destination.endDate)
+      );
+    };
+
+    // const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    //   return current && current < dayjs().endOf('day');
+    // };
+
     return (
       <div>
         <Card
@@ -40,6 +56,7 @@ const Destination: React.FC = () => {
             <Carousel autoplay arrows adaptiveHeight>
               <div key={0}>
                 <img
+                  loading="eager"
                   alt={destination.image.altText}
                   src={`${formatRoute()}${destination.image.src}`}
                   style={carouselImageStyle}
@@ -49,6 +66,7 @@ const Destination: React.FC = () => {
               {destination.additionalImages.map((image, index) => (
                 <div key={index + 1}>
                   <img
+                    loading="eager"
                     src={`${formatRoute()}${image.src}`}
                     alt={image.altText}
                     style={carouselImageStyle}
@@ -79,6 +97,42 @@ const Destination: React.FC = () => {
           <p>
             <b>Ce que vous ferez:</b> {destination.summary.action}
           </p>
+          <Form
+            form={form}
+            name="customized_form_controls"
+            layout={"vertical"}
+            // onFinish={onFinish}
+          >
+            <Form.Item name="dates" label="Entrez une plage de dates: ">
+              <RangePicker
+                disabledDate={disabledDates}
+                format={dateFormat}
+                placement="bottomLeft"
+                defaultPickerValue={[
+                  dayjs(destination.startDate),
+                  dayjs(destination.endDate),
+                ]}
+                minDate={dayjs(destination.startDate)}
+                maxDate={dayjs(destination.endDate)}
+              />
+            </Form.Item>
+
+            <Form.Item name="travellers" label="Nombre de voyageurs: ">
+              <Input
+                type="number"
+                min={1}
+                max={
+                  destination.maxParticipants - destination.currentParticipants
+                }
+                defaultValue={1}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Réserver
+              </Button>
+            </Form.Item>
+          </Form>
         </Card>
       </div>
     );
