@@ -56,14 +56,14 @@ const breadcrumbItemsGenerate = (location: Location<any>) => {
       if (path === "") {
         generatedBreadcrumbs.push({
           title: "Accueil",
-          href: "/",
+          href: `${formatRoute()}/`,
         });
       }
       if (index === 1) {
         generatedBreadcrumbs.push({
           title:
             path === "destinations" ? capitalize(path) : capitalize("à propos"),
-          href: `/${path}`,
+          href: `${formatRoute()}/${path}`,
         });
       }
 
@@ -72,7 +72,7 @@ const breadcrumbItemsGenerate = (location: Location<any>) => {
         .map((destination) => {
           generatedBreadcrumbs.push({
             title: destination.name,
-            href: `/destinations/${destination.id}`,
+            href: `${formatRoute()}/destinations/${destination.id}`,
           });
         });
     });
@@ -135,16 +135,16 @@ const App = () => {
           }}
         >
           <Routes>
-            <Route path={formatRoute()} element={<Home />} />
+            <Route path={`${formatRoute()}/`} element={<Home />} />
             <Route
-              path={`${formatRoute()}destinations`}
+              path={`${formatRoute()}/destinations`}
               element={<DestinationList />}
             />
             <Route
-              path={`${formatRoute()}destinations/:id`}
+              path={`${formatRoute()}/destinations/:id`}
               element={<Destination />}
             />
-            <Route path={`${formatRoute()}about`} element={<About />} />
+            <Route path={`${formatRoute()}/about`} element={<About />} />
           </Routes>
         </div>
       </Content>
@@ -155,7 +155,7 @@ const App = () => {
   );
 };
 
-const AppWrapper: React.FC = () => {
+const AppWrapper = () => {
   return (
     <Router>
       <App />

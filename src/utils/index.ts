@@ -28,5 +28,5 @@ export const formatDateTime = (date: string) => {
 };
 
 export const formatRoute = () => {
-  return import.meta.env.DEV ? "/" : "/ecotravel/";
+  return import.meta.env.DEV ? "" : "/ecotravel";
 };
