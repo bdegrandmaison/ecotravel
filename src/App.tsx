@@ -23,15 +23,15 @@ const { Title } = Typography;
 const menuItems = [
   {
     key: "1",
-    label: <Link to={`${formatRoute()}/`}>Accueil</Link>,
+    label: <Link to="/">Accueil</Link>,
   },
   {
     key: "2",
-    label: <Link to={`${formatRoute()}/destinations`}>Destinations</Link>,
+    label: <Link to="/destinations">Destinations</Link>,
   },
   {
     key: "3",
-    label: <Link to={`${formatRoute()}/about`}>À propos</Link>,
+    label: <Link to="/about">À propos</Link>,
   },
 ];
 
