@@ -190,6 +190,7 @@ const Home = () => {
                 src={`${formatRoute()}${mockDestinations[number - 1].image.src}`}
                 alt={mockDestinations[number - 1].image.altText}
                 style={{ margin: "auto" }}
+                loading="eager"
               />
             </div>
           ))}

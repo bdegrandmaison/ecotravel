@@ -10,6 +10,7 @@ const DestinationCard = ({ destination }: { destination: DestinationType }) => {
         hoverable
         cover={
           <img
+            loading="lazy"
             alt={destination.image.altText}
             src={`${formatRoute()}${destination.image.src}`}
           />

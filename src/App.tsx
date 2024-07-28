@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -6,16 +7,17 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme, Typography } from "antd";
-import Home from "./pages/Home";
-import Destination from "./pages/Destination";
-import About from "./pages/About";
-import DestinationList from "./pages/DestinationList";
 import { capitalize, formatRoute } from "./utils";
 import mockDestinations from "./mocks/mockData/mockDestinations";
 import {
   BreadcrumbItemType,
   BreadcrumbSeparatorType,
 } from "antd/lib/breadcrumb/Breadcrumb";
+
+const Home = lazy(() => import("./pages/Home"));
+const Destination = lazy(() => import("./pages/Destination"));
+const About = lazy(() => import("./pages/About"));
+const DestinationList = lazy(() => import("./pages/DestinationList"));
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -140,12 +142,14 @@ const App = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/destinations" element={<DestinationList />} />
-            <Route path="/destinations/:id" element={<Destination />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/destinations" element={<DestinationList />} />
+              <Route path="/destinations/:id" element={<Destination />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
+          </Suspense>
         </div>
       </Content>
       <Footer style={{ textAlign: "center" }}>
