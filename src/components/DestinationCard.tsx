@@ -5,10 +5,7 @@ import { formatDate, formatPrice, formatRoute } from "../utils";
 
 const DestinationCard = ({ destination }: { destination: DestinationType }) => {
   return (
-    <Link
-      to={`${formatRoute()}destinations/${destination.id}`}
-      style={{ display: "block" }}
-    >
+    <Link to={`/destinations/${destination.id}`} style={{ display: "block" }}>
       <Card
         hoverable
         cover={

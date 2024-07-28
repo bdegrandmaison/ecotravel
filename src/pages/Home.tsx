@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import DestinationCard from "../components/DestinationCard";
 import { DestinationType } from "../types";
 import mockDestinations from "../mocks/mockData/mockDestinations";
+import { formatRoute } from "../utils";
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -30,8 +31,6 @@ const disabledDate = (current: Dayjs) => {
       current > dayjs("2024-12-31", dateFormat))
   );
 };
-
-// TODO: create an array of 5 numbers from 1 to 20
 
 const createRandomNumberArray = () => {
   const numbers: number[] = [];
@@ -100,7 +99,6 @@ const Home = () => {
   }, [dates, travellers]);
 
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
     if (values.dates || values.travellers) {
       mutate(values);
     } else {
@@ -189,7 +187,7 @@ const Home = () => {
           {createRandomNumberArray().map((number) => (
             <div key={number}>
               <img
-                src={mockDestinations[number - 1].image.src}
+                src={`${formatRoute()}${mockDestinations[number - 1].image.src}`}
                 alt={mockDestinations[number - 1].image.altText}
                 style={{ margin: "auto" }}
               />

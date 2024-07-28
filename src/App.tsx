@@ -23,15 +23,15 @@ const { Title } = Typography;
 const menuItems = [
   {
     key: "1",
-    label: <Link to="/">Accueil</Link>,
+    label: <Link to={`${formatRoute()}/`}>Accueil</Link>,
   },
   {
     key: "2",
-    label: <Link to="/destinations">Destinations</Link>,
+    label: <Link to={`${formatRoute()}/destinations`}>Destinations</Link>,
   },
   {
     key: "3",
-    label: <Link to="/about">À propos</Link>,
+    label: <Link to={`${formatRoute()}/about`}>À propos</Link>,
   },
 ];
 
@@ -53,17 +53,17 @@ const breadcrumbItemsGenerate = (location: Location<any>) => {
       | Partial<BreadcrumbItemType & BreadcrumbSeparatorType>[]
       | undefined = [];
     splittedPathname.map((path, index) => {
-      if (path === "") {
+      if (path === "" || path === "ecotravel") {
         generatedBreadcrumbs.push({
           title: "Accueil",
-          href: `${formatRoute()}/`,
+          href: `/`,
         });
       }
       if (index === 1) {
         generatedBreadcrumbs.push({
           title:
             path === "destinations" ? capitalize(path) : capitalize("à propos"),
-          href: `${formatRoute()}/${path}`,
+          href: `/${path}`,
         });
       }
 
@@ -72,7 +72,7 @@ const breadcrumbItemsGenerate = (location: Location<any>) => {
         .map((destination) => {
           generatedBreadcrumbs.push({
             title: destination.name,
-            href: `${formatRoute()}/destinations/${destination.id}`,
+            href: `/destinations/${destination.id}`,
           });
         });
     });
@@ -135,16 +135,10 @@ const App = () => {
           }}
         >
           <Routes>
-            <Route path={`${formatRoute()}/`} element={<Home />} />
-            <Route
-              path={`${formatRoute()}/destinations`}
-              element={<DestinationList />}
-            />
-            <Route
-              path={`${formatRoute()}/destinations/:id`}
-              element={<Destination />}
-            />
-            <Route path={`${formatRoute()}/about`} element={<About />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/destinations" element={<DestinationList />} />
+            <Route path="/destinations/:id" element={<Destination />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </div>
       </Content>
@@ -157,7 +151,7 @@ const App = () => {
 
 const AppWrapper = () => {
   return (
-    <Router>
+    <Router basename={formatRoute()}>
       <App />
     </Router>
   );
