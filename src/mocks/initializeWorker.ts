@@ -5,7 +5,7 @@ export const initializeWorker = async () => {
     serviceWorker: {
       url:
         import.meta.env.MODE === "production"
-          ? "/ecotravel/mockServiceWorker"
+          ? "/ecotravel/mockServiceWorker.js"
           : "mockServiceWorker.js",
     },
     onUnhandledRequest: "bypass",
