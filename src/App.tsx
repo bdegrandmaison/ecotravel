@@ -56,14 +56,14 @@ const breadcrumbItemsGenerate = (location: Location<any>) => {
       if (path === "" || path === "ecotravel") {
         generatedBreadcrumbs.push({
           title: "Accueil",
-          href: `/`,
+          href: `${formatRoute()}/`,
         });
       }
       if (index === 1) {
         generatedBreadcrumbs.push({
           title:
             path === "destinations" ? capitalize(path) : capitalize("à propos"),
-          href: `/${path}`,
+          href: `${formatRoute()}/${path}`,
         });
       }
 
@@ -72,7 +72,7 @@ const breadcrumbItemsGenerate = (location: Location<any>) => {
         .map((destination) => {
           generatedBreadcrumbs.push({
             title: destination.name,
-            href: `/destinations/${destination.id}`,
+            href: `${formatRoute()}/destinations/${destination.id}`,
           });
         });
     });
