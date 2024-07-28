@@ -38,7 +38,7 @@
   },
   "msw": {
     "workerDirectory": [
-      "pubmic"
+      "assets"
     ]
   }
 }
