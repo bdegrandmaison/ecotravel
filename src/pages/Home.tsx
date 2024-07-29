@@ -107,6 +107,12 @@ const Home = () => {
         Découvrez des destinations en participant à des actions pour sauver
         l'écosysteme de notre planète.
       </p>
+      <Alert
+        message="Les bloqueurs de pubs peuvent parfois interférer avec le fonctionnement de l'application, si c'est votre cas, merci d'ouvrir le lien en navigation privée"
+        type="warning"
+        showIcon
+        style={{ padding: " 1rem O", margin: "1rem 0" }}
+      />
       <Form
         form={form}
         name="customized_form_controls"

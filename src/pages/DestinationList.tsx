@@ -1,4 +1,4 @@
-import { List } from "antd";
+import { Alert, List } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import DestinationCard from "../components/DestinationCard";
@@ -25,6 +25,12 @@ const DestinationList = () => {
 
   return (
     <div style={{ padding: "24px" }}>
+      <Alert
+        message="Les bloqueurs de pubs peuvent parfois interférer avec le fonctionnement de l'application, si c'est votre cas, merci d'ouvrir le lien en navigation privée"
+        type="warning"
+        showIcon
+        style={{ padding: " 1rem O", margin: "1rem 0" }}
+      />
       <List
         grid={{
           gutter: 16,
