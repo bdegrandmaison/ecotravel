@@ -14,6 +14,7 @@ import {
   BreadcrumbItemType,
   BreadcrumbSeparatorType,
 } from "antd/lib/breadcrumb/Breadcrumb";
+import Loading from "./components/Loading";
 
 const Home = lazy(() => import("./pages/Home"));
 const Destination = lazy(() => import("./pages/Destination"));
@@ -143,7 +144,7 @@ const App = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/destinations" element={<DestinationList />} />

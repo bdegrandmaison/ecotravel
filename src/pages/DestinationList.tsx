@@ -1,7 +1,8 @@
-import { List, Spin } from "antd";
+import { List } from "antd";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import DestinationCard from "../components/DestinationCard";
+import Loading from "../components/Loading";
 import { DestinationType } from "../types";
 
 const fetchDestinations = async (): Promise<DestinationType[]> => {
@@ -19,7 +20,7 @@ const DestinationList = () => {
     queryFn: fetchDestinations,
   });
 
-  if (isLoading) return <Spin size="large" />;
+  if (isLoading) return <Loading />;
   if (error) return <div>Erreur lors du chargement des destinations</div>;
 
   return (

@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import dayjs from "dayjs";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, Spin } from "antd";
 import locale from "antd/locale/fr_FR";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initializeWorker } from "./mocks/initializeWorker";
@@ -14,13 +14,13 @@ const queryClient = new QueryClient();
 
 const AppWrapper = lazy(() => initializeWorker().then(() => import("./App")));
 
-const Loading = () => <div>Loading...</div>;
+const PageLoading = () => <Spin size="large" fullscreen />;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <ConfigProvider locale={locale}>
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<PageLoading />}>
           <AppWrapper />
         </Suspense>
       </ConfigProvider>

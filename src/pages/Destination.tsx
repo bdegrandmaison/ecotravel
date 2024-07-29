@@ -13,6 +13,7 @@ import {
 } from "antd";
 import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import Loading from "../components/Loading";
 import { DestinationType } from "../types";
 import {
   formatDate,
@@ -101,7 +102,7 @@ const Destination = () => {
     mutate({ ...values, destinationId: destination?.id });
   };
 
-  if (isLoading) return <Spin size="large" />;
+  if (isLoading) return <Loading />;
   if (error) return <div>Erreur lors du chargement de la destination</div>;
 
   if (destination) {
