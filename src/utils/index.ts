@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -32,3 +34,12 @@ export const formatRoute = () => {
 };
 
 export const dateFormat = "DD/MM/YYYY";
+
+export const getDaysBetweenDates = (
+  startDate: string,
+  endDate: string
+): number => {
+  const start = dayjs(startDate);
+  const end = dayjs(endDate);
+  return end.diff(start, "day");
+};

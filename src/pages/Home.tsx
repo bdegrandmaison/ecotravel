@@ -23,11 +23,7 @@ const { RangePicker } = DatePicker;
 dayjs.extend(customParseFormat);
 
 const disabledDate = (current: Dayjs) => {
-  return (
-    current &&
-    (current < dayjs("2024-07-01", dateFormat) ||
-      current > dayjs("2024-12-31", dateFormat))
-  );
+  return current < dayjs("2024-07-01") || current > dayjs("2024-12-31");
 };
 
 const createRandomNumberArray = () => {
@@ -122,6 +118,8 @@ const Home = () => {
             disabledDate={disabledDate}
             format={dateFormat}
             placement="bottomLeft"
+            minDate={dayjs("2024-07-01")}
+            maxDate={dayjs("2024-12-31")}
           />
         </Form.Item>
 

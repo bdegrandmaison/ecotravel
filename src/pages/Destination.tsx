@@ -1,25 +1,80 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, Spin, Carousel, DatePicker, Form, Input, Button } from "antd";
+import {
+  Card,
+  Spin,
+  Carousel,
+  Form,
+  Input,
+  Button,
+  FormInstance,
+  Space,
+  Alert,
+} from "antd";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { DestinationType } from "../types";
-import { dateFormat, formatDate, formatPrice, formatRoute } from "../utils";
-import dayjs, { Dayjs } from "dayjs";
+import {
+  formatDate,
+  formatPrice,
+  formatRoute,
+  getDaysBetweenDates,
+} from "../utils";
 
 const fetchDestination = async (id: string): Promise<DestinationType> => {
   const { data } = await axios.get(`/api/destinations/${id}`);
   return data;
 };
 
-const { RangePicker } = DatePicker;
+const postBookDestination = async (data: any): Promise<{ ok: boolean }> => {
+  const response = await axios.post("/api/book", data);
+  return response.data.ok;
+};
+
+interface SubmitButtonProps {
+  form: FormInstance;
+  isPending?: boolean;
+  isFull?: boolean;
+}
+
+const SubmitButton: React.FC<React.PropsWithChildren<SubmitButtonProps>> = ({
+  form,
+  children,
+  isPending = false,
+  isFull = false,
+}) => {
+  const [submittable, setSubmittable] = useState<boolean>(false);
+
+  const values = Form.useWatch([], form);
+
+  useEffect(() => {
+    form
+      .validateFields({ validateOnly: true })
+      .then(() => setSubmittable(true))
+      .catch(() => setSubmittable(false));
+  }, [form, values]);
+
+  return (
+    <Button
+      type="primary"
+      htmlType="submit"
+      disabled={!submittable || isPending || isFull}
+    >
+      {isPending ? <Spin /> : children}
+    </Button>
+  );
+};
 
 const Destination = () => {
   const [form] = Form.useForm();
   const { id } = useParams<{ id: string }>();
+  const [bookingSuccess, setBookingSuccess] = useState<boolean>(false);
+  const [travellersCount, setTravellersCount] = useState<number>(1);
   const {
     data: destination,
     error,
     isLoading,
+    refetch,
   } = useQuery({
     queryKey: ["destination", id],
     queryFn: () => {
@@ -31,22 +86,27 @@ const Destination = () => {
     enabled: !!id,
   });
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: postBookDestination,
+    onSuccess: (ok) => {
+      if (ok) {
+        setBookingSuccess(true);
+        refetch();
+      }
+    },
+  });
+
+  const onFinish = (values: any) => {
+    setTravellersCount(values.travellers);
+    mutate({ ...values, destinationId: destination?.id });
+  };
+
   if (isLoading) return <Spin size="large" />;
   if (error) return <div>Erreur lors du chargement de la destination</div>;
 
   if (destination) {
-    const disabledDates = (current: Dayjs) => {
-      console.log(current);
-
-      return (
-        current < dayjs(destination.startDate) ||
-        current > dayjs(destination.endDate)
-      );
-    };
-
-    // const disabledDate: RangePickerProps['disabledDate'] = (current) => {
-    //   return current && current < dayjs().endOf('day');
-    // };
+    const isFull =
+      destination.currentParticipants >= destination.maxParticipants;
 
     return (
       <div>
@@ -81,7 +141,8 @@ const Destination = () => {
             <b>Location:</b> {destination.location}
           </p>
           <p>
-            <b>Price:</b> {formatPrice(destination.price)} par jour
+            <b>Price:</b> {formatPrice(destination.price)} par jour et par
+            personne
           </p>
           <p>
             <b>Dates:</b> Du {formatDate(destination.startDate)} au{" "}
@@ -99,40 +160,46 @@ const Destination = () => {
           </p>
           <Form
             form={form}
-            name="customized_form_controls"
+            name="bookForm"
             layout={"vertical"}
-            // onFinish={onFinish}
+            onFinish={onFinish}
+            disabled={isFull}
           >
-            <Form.Item name="dates" label="Entrez une plage de dates: ">
-              <RangePicker
-                disabledDate={disabledDates}
-                format={dateFormat}
-                placement="bottomLeft"
-                defaultPickerValue={[
-                  dayjs(destination.startDate),
-                  dayjs(destination.endDate),
-                ]}
-                minDate={dayjs(destination.startDate)}
-                maxDate={dayjs(destination.endDate)}
-              />
-            </Form.Item>
-
-            <Form.Item name="travellers" label="Nombre de voyageurs: ">
+            <Form.Item
+              name="travellers"
+              label="Nombre de voyageurs: "
+              rules={[{ required: true }]}
+            >
               <Input
                 type="number"
                 min={1}
                 max={
                   destination.maxParticipants - destination.currentParticipants
                 }
-                defaultValue={1}
               />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Réserver
-              </Button>
+              <Space>
+                <SubmitButton form={form} isPending={isPending} isFull={isFull}>
+                  Réserver
+                </SubmitButton>
+              </Space>
             </Form.Item>
           </Form>
+
+          {bookingSuccess && (
+            <Alert
+              message={`Voyage réservé avec succès, partie paiement à venir pour votre paiement de ${formatPrice(
+                destination.price *
+                  travellersCount *
+                  getDaysBetweenDates(
+                    destination.startDate,
+                    destination.endDate
+                  )
+              )}`}
+              type="success"
+            />
+          )}
         </Card>
       </div>
     );

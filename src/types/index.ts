@@ -25,3 +25,8 @@ export type SearchDestinationRequest = {
   dates?: [string, string];
   travellers?: number;
 };
+
+export type BookingRequest = {
+  destinationId: number;
+  travellers: number;
+};

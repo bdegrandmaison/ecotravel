@@ -2,7 +2,11 @@ import { http, delay, HttpResponse } from "msw";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import mockDestinations from "./mockData/mockDestinations";
-import { DestinationType, SearchDestinationRequest } from "../types";
+import {
+  BookingRequest,
+  DestinationType,
+  SearchDestinationRequest,
+} from "../types";
 
 dayjs.extend(isBetween);
 
@@ -13,19 +17,23 @@ type Destination = {
   location: string;
 };
 
+let destinations = mockDestinations;
+
 export const handlers = [
   http.get<{}, DestinationType[]>("/api/destinations", async () => {
     await delay();
-    return HttpResponse.json(mockDestinations);
+    return HttpResponse.json(
+      destinations.filter(
+        (dest) => dest.maxParticipants !== dest.currentParticipants
+      )
+    );
   }),
 
   http.get<{ id: string }, Destination | null>(
     "/api/destinations/:id",
     async ({ params }) => {
       const { id } = params;
-      const destination = mockDestinations.find(
-        (dest) => dest.id === Number(id)
-      );
+      const destination = destinations.find((dest) => dest.id === Number(id));
       if (destination) {
         return HttpResponse.json(destination);
       } else {
@@ -41,7 +49,7 @@ export const handlers = [
       if (body.dates && body.travellers) {
         const [startDate, endDate] = body.dates;
         const { travellers } = body;
-        const results = mockDestinations.filter((dest) => {
+        const results = destinations.filter((dest) => {
           const destStartDate = dayjs(dest.startDate);
           const destEndDate = dayjs(dest.endDate);
           return (
@@ -55,12 +63,13 @@ export const handlers = [
 
       if (body.dates) {
         const [startDate, endDate] = body.dates;
-        const dateResults = mockDestinations.filter((dest) => {
+        const dateResults = destinations.filter((dest) => {
           const destStartDate = dayjs(dest.startDate);
           const destEndDate = dayjs(dest.endDate);
           return (
             destStartDate.isBetween(startDate, endDate, "day", "[]") &&
-            destEndDate.isBetween(startDate, endDate, "day", "[]")
+            destEndDate.isBetween(startDate, endDate, "day", "[]") &&
+            dest.maxParticipants - dest.currentParticipants >= 1
           );
         });
         return HttpResponse.json(dateResults);
@@ -68,13 +77,42 @@ export const handlers = [
 
       if (body.travellers) {
         const { travellers } = body;
-        const travellerResults = mockDestinations.filter((dest) => {
+        const travellerResults = destinations.filter((dest) => {
           return dest.maxParticipants - dest.currentParticipants >= travellers;
         });
         return HttpResponse.json(travellerResults);
       }
 
       return HttpResponse.json([], { status: 400 });
+    }
+  ),
+  http.post<{}, BookingRequest, { ok: boolean }>(
+    "/api/book",
+    async ({ request }) => {
+      const body = await request.json();
+
+      if (body.destinationId && body.travellers) {
+        destinations = destinations.map((dest) => {
+          if (dest.id === body.destinationId) {
+            return {
+              ...dest,
+              currentParticipants:
+                dest.currentParticipants + Number(body.travellers),
+            };
+          }
+          return dest;
+        });
+
+        return HttpResponse.json({
+          ok: true,
+        });
+      }
+      return HttpResponse.json(
+        {
+          ok: false,
+        },
+        { status: 400 }
+      );
     }
   ),
 ];
