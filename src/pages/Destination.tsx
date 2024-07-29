@@ -143,7 +143,9 @@ const Destination = () => {
           </p>
           <p>
             <b>Price:</b> {formatPrice(destination.price)} par jour et par
-            personne
+            personne. Ce prix comprend l'hébergement , les frais de restauration
+            et de transport lors du séjour avec la fête de célébration en fin de
+            mission du séjour.
           </p>
           <p>
             <b>Dates:</b> Du {formatDate(destination.startDate)} au{" "}
