@@ -1,1 +1,0 @@
-import{au as e}from"./index-C2d7POa4.js";import{T as o}from"./App-IUJ1lKty.js";const{Title:s}=o,a=()=>e.jsxs("div",{children:[e.jsx(s,{children:"À propos de EcoTravel"}),e.jsx("p",{children:"EcoTravel est une plateforme dédiée aux voyages écologiques et aux actions environnementales."})]});export{a as default};
